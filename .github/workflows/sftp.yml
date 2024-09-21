@@ -3,7 +3,7 @@ name: SFTP Deploy
 on:
   push:
     branches:
-      - main  # You can change this to the branch you want to trigger the action
+      - master  # You can change this to the branch you want to trigger the action
 
 jobs:
   deploy:
