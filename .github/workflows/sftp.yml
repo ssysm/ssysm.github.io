@@ -1,0 +1,28 @@
+name: SFTP Deploy
+
+on:
+  push:
+    branches:
+      - main  # You can change this to the branch you want to trigger the action
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install SSH and SFTP client
+        run: sudo apt-get install -y sshpass openssh-client
+
+      - name: Upload files to remote server via SFTP
+        env:
+          SFTP_USERNAME: ${{ secrets.SFTP_USERNAME }}
+          SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
+          SFTP_HOST: ${{ secrets.SFTP_HOST }}
+        run: |
+          sshpass -p "$SFTP_PASSWORD" sftp -oHostKeyAlgorithms=+ssh-dss -oStrictHostKeyChecking=no $SFTP_USERNAME@$SFTP_HOST <<EOF
+          put -r * /home/s/shengming/public_html
+          bye
+          EOF
